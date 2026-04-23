@@ -1,6 +1,6 @@
 from app.models.widget import WidgetConfigResponse, WidgetSettings
+from app.repositories.widget_config_repository import widget_config_repo
 
-# Mock config — substituir por consulta ao banco quando existir
 _DEFAULT_WIDGET = WidgetSettings(
     title="Atendimento",
     subtitle="Como posso ajudar?",
@@ -11,12 +11,20 @@ _DEFAULT_WIDGET = WidgetSettings(
     header_layout="left",
     initial_messages=["Olá! Como posso ajudar você hoje?"],
     placeholder="Digite sua mensagem",
+    bot_avatar="default",
+    message_font_size="medium",
 )
 
 
 def get_widget_config(tenant_id: str, bot_id: str) -> WidgetConfigResponse:
+    saved = widget_config_repo.get(tenant_id, bot_id)
     return WidgetConfigResponse(
         tenant_id=tenant_id,
         bot_id=bot_id,
-        widget=_DEFAULT_WIDGET,
+        widget=saved if saved is not None else _DEFAULT_WIDGET,
     )
+
+
+def save_widget_config(tenant_id: str, bot_id: str, settings: WidgetSettings) -> WidgetConfigResponse:
+    widget_config_repo.save(tenant_id, bot_id, settings)
+    return WidgetConfigResponse(tenant_id=tenant_id, bot_id=bot_id, widget=settings)

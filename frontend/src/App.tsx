@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { CustomizePage } from "./pages/CustomizePage";
 import { EmbedPage } from "./pages/EmbedPage";
 
 export function App() {
@@ -6,6 +7,7 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/widget/embed" element={<EmbedPage />} />
+        <Route path="/widget/customize" element={<CustomizePage />} />
         <Route
           path="*"
           element={
